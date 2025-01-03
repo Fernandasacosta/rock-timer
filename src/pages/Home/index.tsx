@@ -15,17 +15,31 @@ import { useForm } from 'react-hook-form'
 
 const newCycleFormValidationSchema = zod.object({
   task: zod.string().min(1, 'Informe a tarefa'), 
-  minutesAmount: zod.number()
+  minutesAmount: zod
+  .number()
   .min(5, 'O intervalo deve ser no minimo 5 minutos')
   .max(60, 'O intervalo deve ser no maximo 60 minutos'),
+
 })
 
+  interface NewCycleFormData {
+    task: string
+    minutesAmount: number
+  }
+
+  // type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>
+  // o type serve para substituir a interface 
+
 export function Home() {
-  const { register, handleSubmit, watch } = useForm({
+  const { register, handleSubmit, watch } = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
+    defaultValues: {
+      task: '',
+      minutesAmount: 0,
+    }
   })
 
-  function handleCreateNewCycle(data: any) {
+  function handleCreateNewCycle(data: NewCycleFormData) {
     console.log(data)
   }
 
